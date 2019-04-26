@@ -56,7 +56,7 @@ class Fake extends Command
                 new InputArgument(
                     self::CODE_ARGUMENT,
                     InputArgument::REQUIRED,
-                    'Code of the fake data to generate (All to generate all fake data'
+                    'Code of the fake data to generate (All to generate all fake data)'
                 ),
             ]
         );
