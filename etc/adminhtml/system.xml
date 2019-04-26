@@ -64,13 +64,19 @@
                 <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Number of order to create per store</label>
                 </field>
-                <field id="invoice_ratio" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="payment_method" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment method</label>
+                </field>
+                <field id="shipping_method" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Shipping method</label>
+                </field>
+                <field id="invoice_ratio" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Ratio of order to invoice</label>
                 </field>
-                <field id="shipment_ratio" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="shipment_ratio" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Ratio of invoiced order to ship</label>
                 </field>
-                <field id="rma_ratio" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="rma_ratio" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Ratio of order to cancel</label>
                 </field>
             </group>
