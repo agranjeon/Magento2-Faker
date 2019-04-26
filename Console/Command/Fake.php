@@ -51,7 +51,7 @@ class Fake extends Command
      */
     protected function configure()
     {
-        $this->setName('agranjeon:fake:data')->setDescription('Create lot of fake customer and order')->setDefinition(
+        $this->setName('agranjeon:fake:data')->setDescription('Generate fake data')->setDefinition(
             [
                 new InputArgument(
                     self::CODE_ARGUMENT,
