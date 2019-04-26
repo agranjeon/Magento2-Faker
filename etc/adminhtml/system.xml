@@ -8,6 +8,10 @@
             <resource>Agranjeon_Faker::system_config</resource>
             <group id="global" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Global Configuration</label>
+                <field id="enabled_prod" translate="label comment" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enabled on production mode</label>
+                    <comment>If set to no, using the command while in production mode would throw an error</comment>
+                </field>
                 <field id="locale" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Locale of fake data</label>
                 </field>
