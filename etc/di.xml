@@ -1,20 +1,25 @@
 <?xml version="1.0"?>
 
-<!--
-/**
- * @category  Configuration
- * @package   Dnd\Faker\etc
- * @author    Agence Dn'D <contact@dnd.fr>
- * @copyright 2019 Agence Dn'D
- * @license   https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * @link      https://www.dnd.fr/
- */
--->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="dnd_faker_fake" xsi:type="object">Dnd\Faker\Console\Command\Fake</item>
+                <item name="agranjeon_faker_fake" xsi:type="object">Agranjeon\Faker\Console\Command\Fake</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Agranjeon\Faker\Model\FakerProvider">
+        <arguments>
+            <argument name="fakerList" xsi:type="array">
+                <item name="category" xsi:type="object">Agranjeon\Faker\Model\Faker\Category</item>
+                <item name="product" xsi:type="object">Agranjeon\Faker\Model\Faker\Product</item>
+                <item name="customer" xsi:type="object">Agranjeon\Faker\Model\Faker\Customer</item>
+                <item name="customer_address" xsi:type="object">Agranjeon\Faker\Model\Faker\CustomerAddress</item>
+                <item name="order" xsi:type="object">Agranjeon\Faker\Model\Faker\Order</item>
+                <item name="invoice" xsi:type="object">Agranjeon\Faker\Model\Faker\Invoice</item>
+                <item name="shipment" xsi:type="object">Agranjeon\Faker\Model\Faker\Shipment</item>
+                <item name="rma" xsi:type="object">Agranjeon\Faker\Model\Faker\Rma</item>
             </argument>
         </arguments>
     </type>

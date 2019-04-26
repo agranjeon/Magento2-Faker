@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="faker" sortOrder="50" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Faker</label>
+            <tab>advanced</tab>
+            <resource>Agranjeon_Faker::system_config</resource>
+            <group id="global" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Global Configuration</label>
+                <field id="locale" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Locale of fake data</label>
+                </field>
+                <field id="website_ids" translate="label" type="multiselect" sortOrder="20" showInDefault="1">
+                    <label>Website to generate fake data</label>
+                </field>
+            </group>
+            <group id="category" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Category Configuration</label>
+                <field id="parent_category" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Parent category ID</label>
+                    <comment>Categories will be created as child of this category</comment>
+                </field>
+                <field id="max_depth" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Max depth level</label>
+                </field>
+                <field id="min_number" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Minimum number of category to create per level</label>
+                </field>
+                <field id="max_number" translate="label" sortOrder="40" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximum number of category to create per level</label>
+                </field>
+            </group>
+            <group id="product" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Configuration</label>
+                <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Number of products to create</label>
+                </field>
+                <field id="min_category_number" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Minimum number of category products should be associated to</label>
+                </field>
+                <field id="max_category_number" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximum number of category products should be associated to</label>
+                </field>
+            </group>
+            <group id="customer" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Configuration</label>
+                <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1">
+                    <label>Number of customer to create per website</label>
+                </field>
+                <field id="min_address_number" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Minimum number of address per customer</label>
+                </field>
+                <field id="max_address_number" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximum number of address per customer</label>
+                </field>
+            </group>
+            <group id="order" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Order Configuration</label>
+                <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Number of order to create per store</label>
+                </field>
+                <field id="invoice_ratio" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ratio of order to invoice</label>
+                </field>
+                <field id="shipment_ratio" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ratio of invoiced order to ship</label>
+                </field>
+                <field id="rma_ratio" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ratio of order to cancel</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
