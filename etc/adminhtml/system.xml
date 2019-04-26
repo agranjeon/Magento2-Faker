@@ -11,12 +11,15 @@
                 <field id="enabled_prod" translate="label comment" type="select" sortOrder="10" showInDefault="1">
                     <label>Enabled on production mode</label>
                     <comment>If set to no, using the command while in production mode would throw an error</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="locale" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Locale of fake data</label>
+                    <source_model>Agranjeon\Faker\Model\Config\Source\Locale</source_model>
                 </field>
                 <field id="website_ids" translate="label" type="multiselect" sortOrder="20" showInDefault="1">
                     <label>Website to generate fake data</label>
+                    <source_model>Magento\Config\Model\Config\Source\Website</source_model>
                 </field>
             </group>
             <group id="category" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -66,9 +69,11 @@
                 </field>
                 <field id="payment_method" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Payment method</label>
+                    <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
                 </field>
                 <field id="shipping_method" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Shipping method</label>
+                    <source_model>Magento\Payment\Model\Config\Source\Allmethods</source_model>
                 </field>
                 <field id="invoice_ratio" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Ratio of order to invoice</label>
