@@ -52,8 +52,8 @@
             </group>
             <group id="customer" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Product Configuration</label>
-                <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1">
-                    <label>Number of customer to create per website</label>
+                <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Number of customer to create per store</label>
                 </field>
                 <field id="min_address_number" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Minimum number of address per customer</label>
