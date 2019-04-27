@@ -22,31 +22,31 @@
                     <source_model>Magento\Config\Model\Config\Source\Website</source_model>
                 </field>
             </group>
-            <group id="category" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="category" translate="label" sortOrder="20" showInDefault="1">
                 <label>Category Configuration</label>
-                <field id="parent_category" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="parent" translate="label comment" sortOrder="10" type="text" showInDefault="1">
                     <label>Parent category ID</label>
                     <comment>Categories will be created as child of this category</comment>
                 </field>
-                <field id="max_depth" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="max_depth" translate="label" sortOrder="20" type="text" showInDefault="1">
                     <label>Max depth level</label>
                 </field>
-                <field id="min_number" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="min_number" translate="label" sortOrder="30" type="text" showInDefault="1">
                     <label>Minimum number of category to create per level</label>
                 </field>
-                <field id="max_number" translate="label" sortOrder="40" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="max_number" translate="label" sortOrder="40" type="text" showInDefault="1">
                     <label>Maximum number of category to create per level</label>
                 </field>
             </group>
-            <group id="product" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="product" translate="label" sortOrder="30" showInDefault="1">
                 <label>Product Configuration</label>
-                <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1">
                     <label>Number of products to create</label>
                 </field>
-                <field id="min_category_number" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="min_category_number" translate="label" type="text" sortOrder="20" showInDefault="1">
                     <label>Minimum number of category products should be associated to</label>
                 </field>
-                <field id="max_category_number" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="max_category_number" translate="label" type="text" sortOrder="30" showInDefault="1">
                     <label>Maximum number of category products should be associated to</label>
                 </field>
             </group>

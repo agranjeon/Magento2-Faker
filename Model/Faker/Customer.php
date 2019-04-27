@@ -62,7 +62,7 @@ class Customer extends AbstractFaker implements FakerInterface
             $faker = $this->getFaker($store);
             $websiteId = $store->getWebsiteId();
             $storeId = $store->getStoreId();
-            for ($i = 0; $i < $this->getStoreConfig('faker/customer/number'); $i++) {
+            for ($i = 0; $i < $this->getStoreConfig('faker/customer/number', $storeId); $i++) {
                 /** @var CustomerModel $customer */
                 $customer = $this->customerFactory->create();
 
