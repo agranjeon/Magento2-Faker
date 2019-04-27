@@ -68,8 +68,9 @@ class CustomerAddress extends AbstractFaker implements FakerInterface
             $availableCountryId = $this->getStoreConfig('general/country/allow', $storeId);
             $availableRegionId = $this->getAvailableRegionIds($storeId);
             $faker = $this->getFaker($storeId);
+            $iterationNumber = rand($minAddressNumber, $maxAddressNumber);
 
-            for ($i = 0; $i < rand($minAddressNumber, $maxAddressNumber); $i++) {
+            for ($i = 0; $i < $iterationNumber; $i++) {
                 $address = $this->addressDataFactory->create();
                 $address->setFirstname($faker->firstName)
                     ->setLastname($faker->lastName)
