@@ -8,6 +8,7 @@ use Agranjeon\Faker\Api\FakerInterface;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
 use Magento\Directory\Model\ResourceModel\Region\Collection;
+use Magento\Directory\Model\ResourceModel\Region\CollectionFactory as RegionCollectionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ResourceModel\Store\CollectionFactory as StoreCollectionFactory;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
@@ -32,17 +33,18 @@ class CustomerAddress extends AbstractFaker implements FakerInterface
 
     private $cachedRegionIds = [];
     /**
-     * @var CollectionFactory
+     * @var RegionCollectionFactory
      */
     private $regionCollectionFactory;
 
     /**
      * CustomerAddress constructor.
+     *
      * @param ScopeConfigInterface $scopeConfig
      * @param StoreCollectionFactory $storeCollectionFactory
      * @param CustomerCollectionFactory $customerCollectionFactory
      */
-    public function __construct(ScopeConfigInterface $scopeConfig, StoreCollectionFactory $storeCollectionFactory, CustomerCollectionFactory $customerCollectionFactory, AddressRepositoryInterface $addressRepository, AddressInterfaceFactory $addressDataFactory, CollectionFactory $regionCollectionFactory)
+    public function __construct(ScopeConfigInterface $scopeConfig, StoreCollectionFactory $storeCollectionFactory, CustomerCollectionFactory $customerCollectionFactory, AddressRepositoryInterface $addressRepository, AddressInterfaceFactory $addressDataFactory, RegionCollectionFactory $regionCollectionFactory)
     {
         parent::__construct($scopeConfig, $storeCollectionFactory);
 
@@ -68,7 +70,7 @@ class CustomerAddress extends AbstractFaker implements FakerInterface
             $availableCountryId = $this->getStoreConfig('general/country/allow', $storeId);
             $availableRegionId = $this->getAvailableRegionIds($storeId);
             $faker = $this->getFaker($storeId);
-            $iterationNumber = rand($minAddressNumber, $maxAddressNumber);
+            $iterationNumber = $faker->numberBetween($minAddressNumber, $maxAddressNumber);
 
             for ($i = 0; $i < $iterationNumber; $i++) {
                 $address = $this->addressDataFactory->create();
@@ -79,7 +81,7 @@ class CustomerAddress extends AbstractFaker implements FakerInterface
                     ->setCity($faker->city)
                     ->setPostcode($faker->postcode)
                     ->setCustomerId($customerId)
-                    ->setStreet($faker->streetAddress)
+                    ->setStreet([$faker->streetAddress])
                     ->setTelephone($faker->phoneNumber);
 
                 $this->addressRepository->save($address);

@@ -88,8 +88,8 @@ class Category extends AbstractFaker implements FakerInterface
         if ($depth == 0) {
             return;
         }
-        
-        $subCategoriesNumber = rand($this->getStoreConfig('faker/category/min_number'), $this->getStoreConfig('faker/category/max_number'));
+
+        $subCategoriesNumber = $this->faker->numberBetween($this->getStoreConfig('faker/category/min_number'), $this->getStoreConfig('faker/category/max_number'));
         for ($i = 0; $i < $subCategoriesNumber; $i++) {
             $this->createCategory($categoryId, $depth);
         }
