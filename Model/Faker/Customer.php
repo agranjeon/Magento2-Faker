@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Agranjeon\Faker\Model\Faker;
 
 use Agranjeon\Faker\Api\FakerInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Customer as CustomerModel;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\ResourceModel\Customer as CustomerResourceModel;
@@ -19,33 +20,38 @@ use Magento\Store\Model\Store;
 class Customer extends AbstractFaker implements FakerInterface
 {
     /**
-     * @var CustomerFactory
+     * @var CustomerFactory $customerFactory
      */
-    private $customerFactory;
+    protected $customerFactory;
     /**
-     * @var CustomerResourceModel
+     * @var CustomerResourceModel $customerResourceModel
      */
-    private $customerResourceModel;
+    protected $customerResourceModel;
     /**
-     * @var CustomerGroupCollectionFactory
+     * @var CustomerGroupCollectionFactory $customerGroupCollectionFactory
      */
-    private $customerGroupCollectionFactory;
+    protected $customerGroupCollectionFactory;
 
     /**
      * Customer constructor.
      *
-     * @param ScopeConfigInterface $scopeConfig
-     * @param StoreCollectionFactory $storeCollectionFactory
-     * @param CustomerResourceModel $customerResourceModel
-     * @param CustomerFactory $customerFactory
+     * @param ScopeConfigInterface           $scopeConfig
+     * @param StoreCollectionFactory         $storeCollectionFactory
+     * @param CustomerFactory                $customerFactory
+     * @param CustomerResourceModel          $customerResourceModel
      * @param CustomerGroupCollectionFactory $customerGroupCollectionFactory
      */
-    public function __construct(ScopeConfigInterface $scopeConfig, StoreCollectionFactory $storeCollectionFactory, CustomerResourceModel $customerResourceModel, CustomerFactory $customerFactory, CustomerGroupCollectionFactory $customerGroupCollectionFactory)
-    {
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        StoreCollectionFactory $storeCollectionFactory,
+        CustomerFactory $customerFactory,
+        CustomerResourceModel $customerResourceModel,
+        CustomerGroupCollectionFactory $customerGroupCollectionFactory
+    ) {
         parent::__construct($scopeConfig, $storeCollectionFactory);
 
-        $this->customerFactory = $customerFactory;
-        $this->customerResourceModel = $customerResourceModel;
+        $this->customerFactory                = $customerFactory;
+        $this->customerResourceModel          = $customerResourceModel;
         $this->customerGroupCollectionFactory = $customerGroupCollectionFactory;
     }
 
@@ -59,25 +65,27 @@ class Customer extends AbstractFaker implements FakerInterface
 
         /** @var Store $store */
         foreach ($this->getStores() as $store) {
-            $faker = $this->getFaker($store);
+            $faker     = $this->getFaker($store);
             $websiteId = $store->getWebsiteId();
-            $storeId = $store->getStoreId();
+            $storeId   = $store->getStoreId();
             for ($i = 0; $i < $this->getStoreConfig('faker/customer/number', $storeId); $i++) {
                 /** @var CustomerModel $customer */
                 $customer = $this->customerFactory->create();
 
-                $customer->setData([
-                    'prefix' => $faker->title,
-                    'firstname' => $faker->firstName,
-                    'lastname' => $faker->lastName,
-                    'email' => $faker->email,
-                    'dateOfBirth' => $faker->date('m/d/Y'),
-                    'gender' => $faker->numberBetween(0, 1),
-                    'group_id' => array_rand($customerGroupIds),
-                    'store_id' => $storeId,
-                    'website_id' => $websiteId,
-                    'password' => $faker->password
-                ]);
+                $customer->setData(
+                    [
+                        CustomerInterface::PREFIX     => $faker->title,
+                        CustomerInterface::FIRSTNAME  => $faker->firstName,
+                        CustomerInterface::LASTNAME   => $faker->lastName,
+                        CustomerInterface::EMAIL      => $faker->email,
+                        CustomerInterface::DOB        => $faker->date('m/d/Y'),
+                        CustomerInterface::GENDER     => $faker->numberBetween(0, 1),
+                        CustomerInterface::GROUP_ID   => array_rand($customerGroupIds),
+                        CustomerInterface::STORE_ID   => $storeId,
+                        CustomerInterface::WEBSITE_ID => $websiteId,
+                        'password'                    => $faker->password,
+                    ]
+                );
 
                 $this->customerResourceModel->save($customer);
             }

@@ -27,20 +27,22 @@ abstract class AbstractFaker
      * @var StoreCollectionFactory
      */
     private $storeCollectionFactory;
-
+    /**
+     * @var array $cachedConfigurations
+     */
     private $cachedConfigurations = [];
 
     /**
      * AbstractFaker constructor
      *
-     * @param ScopeConfigInterface $scopeConfig
+     * @param ScopeConfigInterface   $scopeConfig
      * @param StoreCollectionFactory $storeCollectionFactory
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         StoreCollectionFactory $storeCollectionFactory
     ) {
-        $this->scopeConfig = $scopeConfig;
+        $this->scopeConfig            = $scopeConfig;
         $this->storeCollectionFactory = $storeCollectionFactory;
     }
 

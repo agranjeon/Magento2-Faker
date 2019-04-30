@@ -18,39 +18,46 @@ use Magento\Store\Model\ResourceModel\Store\CollectionFactory as StoreCollection
 class Product extends AbstractFaker implements FakerInterface
 {
     /**
-     * @var ProductFactory
+     * @var ProductFactory $productFactory
      */
-    private $productFactory;
+    protected $productFactory;
     /**
-     * @var ProductRepositoryInterface
+     * @var ProductRepositoryInterface $productRepository
      */
-    private $productRepository;
+    protected $productRepository;
     /**
-     * @var CategoryCollectionFactory
+     * @var CategoryCollectionFactory $categoryCollectionFactory
      */
-    private $categoryCollectionFactory;
+    protected $categoryCollectionFactory;
     /**
-     * @var CategoryLinkManagementInterface
+     * @var CategoryLinkManagementInterface $categoryLinkManagement
      */
-    private $categoryLinkManagement;
+    protected $categoryLinkManagement;
 
     /**
      * Product constructor.
-     * @param ScopeConfigInterface $scopeConfig
-     * @param StoreCollectionFactory $storeCollectionFactory
-     * @param ProductFactory $productFactory
-     * @param ProductRepositoryInterface $productRepository
-     * @param CategoryCollectionFactory $categoryCollectionFactory
+     *
+     * @param ScopeConfigInterface            $scopeConfig
+     * @param StoreCollectionFactory          $storeCollectionFactory
+     * @param ProductFactory                  $productFactory
+     * @param ProductRepositoryInterface      $productRepository
+     * @param CategoryCollectionFactory       $categoryCollectionFactory
      * @param CategoryLinkManagementInterface $categoryLinkManagement
      */
-    public function __construct(ScopeConfigInterface $scopeConfig, StoreCollectionFactory $storeCollectionFactory, ProductFactory $productFactory, ProductRepositoryInterface $productRepository, CategoryCollectionFactory $categoryCollectionFactory, CategoryLinkManagementInterface $categoryLinkManagement)
-    {
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        StoreCollectionFactory $storeCollectionFactory,
+        ProductFactory $productFactory,
+        ProductRepositoryInterface $productRepository,
+        CategoryCollectionFactory $categoryCollectionFactory,
+        CategoryLinkManagementInterface $categoryLinkManagement
+    ) {
         parent::__construct($scopeConfig, $storeCollectionFactory);
 
-        $this->productFactory = $productFactory;
-        $this->productRepository = $productRepository;
+        $this->productFactory            = $productFactory;
+        $this->productRepository         = $productRepository;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
-        $this->categoryLinkManagement = $categoryLinkManagement;
+        $this->categoryLinkManagement    = $categoryLinkManagement;
     }
 
     /**
@@ -59,9 +66,9 @@ class Product extends AbstractFaker implements FakerInterface
     public function generateFakeData(): void
     {
         $numberOfProduct = $this->getStoreConfig('faker/product/number');
-        $websiteIds = $this->getStoreConfig('faker/global/website_ids');
-        $faker = $this->getFaker(0);
-        $categoryIds = $this->categoryCollectionFactory->create()->getAllIds();
+        $websiteIds      = $this->getStoreConfig('faker/global/website_ids');
+        $faker           = $this->getFaker(0);
+        $categoryIds     = $this->categoryCollectionFactory->create()->getAllIds();
 
         for ($i = 0; $i < $numberOfProduct; $i++) {
             $product = $this->productFactory->create();
@@ -76,9 +83,10 @@ class Product extends AbstractFaker implements FakerInterface
             $product->setAttributeSetId(4);
             $product->setVisibility(4);
             $product->setPrice($faker->numberBetween(5, 100));
-            $product->setStockData([
+            $product->setStockData(
+                [
                     'is_in_stock' => $faker->boolean(90),
-                    'qty' => $faker->numberBetween(0, 100),
+                    'qty'         => $faker->numberBetween(0, 100),
                 ]
             );
 

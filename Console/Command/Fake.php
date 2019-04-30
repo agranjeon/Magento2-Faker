@@ -42,6 +42,7 @@ class Fake extends Command
         ?string $name = null
     ) {
         parent::__construct($name);
+
         $this->fakerProvider = $fakerProvider;
         $this->appState      = $appState;
     }
