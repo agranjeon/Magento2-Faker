@@ -13,6 +13,8 @@ use Magento\Customer\Model\ResourceModel\Group\CollectionFactory as CustomerGrou
 use Magento\Store\Model\ResourceModel\Store\CollectionFactory as StoreCollectionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\Store;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Alexandre Granjeon <alexandre.granjeon@gmail.com>
@@ -56,9 +58,11 @@ class Customer extends AbstractFaker implements FakerInterface
     }
 
     /**
+     * @param OutputInterface $output
+     *
      * @return void
      */
-    public function generateFakeData(): void
+    public function generateFakeData(OutputInterface $output): void
     {
         /** @var int[] $customerGroupIds */
         $customerGroupIds = $this->customerGroupCollectionFactory->create()->getAllIds();
@@ -68,7 +72,20 @@ class Customer extends AbstractFaker implements FakerInterface
             $faker     = $this->getFaker($store);
             $websiteId = $store->getWebsiteId();
             $storeId   = $store->getStoreId();
-            for ($i = 0; $i < $this->getStoreConfig('faker/customer/number', $storeId); $i++) {
+            $customerNumber = (int)$this->getStoreConfig('faker/customer/number', $storeId);
+
+            $progressBar = new ProgressBar(
+                $output->section(),
+                $customerNumber
+            );
+            $progressBar->setFormat(
+                '<info>%message%</info> %current%/%max% [%bar%] %percent:3s%% %elapsed% %memory:6s%'
+            );
+            $progressBar->start();
+            $progressBar->setMessage('Customers for store ' . $store->getName() . ' ...');
+            $progressBar->display();
+
+            for ($i = 0; $i < $customerNumber; $i++) {
                 /** @var CustomerModel $customer */
                 $customer = $this->customerFactory->create();
 
@@ -80,7 +97,7 @@ class Customer extends AbstractFaker implements FakerInterface
                         CustomerInterface::EMAIL      => $faker->email,
                         CustomerInterface::DOB        => $faker->date('m/d/Y'),
                         CustomerInterface::GENDER     => $faker->numberBetween(0, 1),
-                        CustomerInterface::GROUP_ID   => array_rand($customerGroupIds),
+                        CustomerInterface::GROUP_ID   => $customerGroupIds[array_rand($customerGroupIds)],
                         CustomerInterface::STORE_ID   => $storeId,
                         CustomerInterface::WEBSITE_ID => $websiteId,
                         'password'                    => $faker->password,
@@ -88,7 +105,11 @@ class Customer extends AbstractFaker implements FakerInterface
                 );
 
                 $this->customerResourceModel->save($customer);
+
+                $progressBar->advance();
             }
+
+            $progressBar->finish();
         }
     }
 }

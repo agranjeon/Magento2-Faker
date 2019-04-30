@@ -81,29 +81,17 @@ class Fake extends Command
 
         if ($code !== 'all') {
             $faker = $this->fakerProvider->getFaker($code);
-            $faker->generateFakeData();
+            $faker->generateFakeData($output);
 
             $io->success('Fake data has been successfully generated for ' . $code);
 
             return;
         }
 
-        $fakers      = $this->fakerProvider->getFakers();
-        $progressBar = new ProgressBar($output, count($fakers));
-        $progressBar->setFormat(
-            '<info>%message%</info> %current%/%max% [%bar%] %percent:3s%% %elapsed% %memory:6s%'
-        );
-        $progressBar->start();
-        $progressBar->display();
+        $fakers = $this->fakerProvider->getFakers();
         foreach ($fakers as $code => $faker) {
-            $progressBar->setMessage($code . '...');
-            $progressBar->display();
-
-            $faker->generateFakeData();
-
-            $progressBar->advance();
+            $faker->generateFakeData($output);
         }
-        $progressBar->finish();
         $io->success('Fake data has been successfully generated');
     }
 }

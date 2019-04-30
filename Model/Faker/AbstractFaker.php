@@ -77,7 +77,10 @@ abstract class AbstractFaker
     {
         /** @var Collection $storeCollection */
         $storeCollection = $this->storeCollectionFactory->create();
-        $storeCollection->addFieldToFilter('store_id', ['in' => $this->getStoreConfig('faker/global/website_ids')]);
+        $storeCollection->addFieldToFilter(
+            'website_id',
+            ['in' => explode(',', $this->getStoreConfig('faker/global/website_ids'))]
+        )->addStatusFilter(1);
 
         return $storeCollection;
     }

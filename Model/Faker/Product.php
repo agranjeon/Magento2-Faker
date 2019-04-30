@@ -11,6 +11,8 @@ use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ResourceModel\Store\CollectionFactory as StoreCollectionFactory;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Alexandre Granjeon <alexandre.granjeon@gmail.com>
@@ -61,20 +63,34 @@ class Product extends AbstractFaker implements FakerInterface
     }
 
     /**
+     * @param OutputInterface $output
+     *
      * @return void
      */
-    public function generateFakeData(): void
+    public function generateFakeData(OutputInterface $output): void
     {
-        $numberOfProduct = $this->getStoreConfig('faker/product/number');
-        $websiteIds      = $this->getStoreConfig('faker/global/website_ids');
+        $numberOfProduct = (int)$this->getStoreConfig('faker/product/number');
+        $websiteIds      = explode(',', $this->getStoreConfig('faker/global/website_ids'));
         $faker           = $this->getFaker(0);
         $categoryIds     = $this->categoryCollectionFactory->create()->getAllIds();
+        $progressBar     = new ProgressBar(
+            $output->section(),
+            $numberOfProduct
+        );
+        $progressBar->setFormat(
+            '<info>%message%</info> %current%/%max% [%bar%] %percent:3s%% %elapsed% %memory:6s%'
+        );
+        $progressBar->start();
+        $progressBar->setMessage('Products ...');
+        $progressBar->display();
 
+        //todo: optimize this (how?). very slow
         for ($i = 0; $i < $numberOfProduct; $i++) {
             $product = $this->productFactory->create();
             $product->setSku(uniqid());
             $product->setStatus($faker->boolean(90));
-            $product->setName($faker->words($faker->numberBetween(3, 5), true));
+            $product->setName(substr($faker->realText($faker->numberBetween(15, 25)), 0, -1));
+            $product->setUrlKey($faker->uuid);
             $product->setWebsiteIds($websiteIds);
             $product->setTypeId('simple');
             // Todo: retrieve available attribute set for product type and use a random one. Fill attribute set's attributes values
@@ -92,7 +108,7 @@ class Product extends AbstractFaker implements FakerInterface
 
             $this->productRepository->save($product);
 
-            $productCategories = array_rand(
+            $productCategoryIds = array_rand(
                 $categoryIds,
                 $faker->numberBetween(
                     $this->getStoreConfig('faker/product/min_category_number'),
@@ -100,12 +116,21 @@ class Product extends AbstractFaker implements FakerInterface
                 )
             );
 
+            $productCategories = [];
+            foreach ($productCategoryIds as $categoryId) {
+                $productCategories[] = $categoryIds[$categoryId];
+            }
+
             if (!empty($productCategories)) {
                 $this->categoryLinkManagement->assignProductToCategories(
                     $product->getSku(),
                     $productCategories
                 );
             }
+
+            $progressBar->advance();
         }
+
+        $progressBar->finish();
     }
 }

@@ -10,6 +10,8 @@ use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Model\CategoryFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ResourceModel\Store\CollectionFactory as StoreCollectionFactory;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Alexandre Granjeon <alexandre.granjeon@gmail.com>
@@ -50,16 +52,31 @@ class Category extends AbstractFaker implements FakerInterface
     }
 
     /**
+     * @param OutputInterface $output
+     *
      * @return void
      */
-    public function generateFakeData(): void
+    public function generateFakeData(OutputInterface $output): void
     {
         $this->faker    = $this->getFaker(0);
         $baseCategoryId = (int)$this->getStoreConfig('faker/category/parent');
         $depth          = (int)$this->getStoreConfig('faker/category/max_depth');
+
+        $progressBar = new ProgressBar($output->section(), (int)$this->getStoreConfig('faker/category/max_number'));
+        $progressBar->setFormat(
+            '<info>%message%</info> %current%/%max% [%bar%] %percent:3s%% %elapsed% %memory:6s%'
+        );
+        $progressBar->start();
+        $progressBar->setMessage('Categories ...');
+        $progressBar->display();
+
         for ($i = 0; $i < $this->getStoreConfig('faker/category/max_number'); $i++) {
             $this->createCategory($baseCategoryId, $depth);
+            $progressBar->advance();
+            $progressBar->display();
         }
+
+        $progressBar->finish();
     }
 
     /**
@@ -75,15 +92,16 @@ class Category extends AbstractFaker implements FakerInterface
         }
 
         $category = $this->categoryFactory->create();
-        $category->setName($this->faker->words(2, true));
+        $category->setName(substr($this->faker->realText(20), 0, -1));
+        $category->setUrlKey($this->faker->uuid);
         $category->setParentId($parentId);
         $category->setIsActive($this->faker->boolean(85));
         $category->setCustomAttributes(
             [
-                'description'      => $this->faker->sentence(15),
+                'description'      => $this->faker->realText(100, 5),
                 'meta_tile'        => $this->faker->word,
-                'meta_keywords'    => $this->faker->sentence(10),
-                'meta_description' => $this->faker->sentence(15),
+                'meta_keywords'    => $this->faker->realText(50, 5),
+                'meta_description' => $this->faker->realText(100, 5),
             ]
         );
 
@@ -99,7 +117,7 @@ class Category extends AbstractFaker implements FakerInterface
             $this->getStoreConfig('faker/category/max_number')
         );
         for ($i = 0; $i < $subCategoriesNumber; $i++) {
-            $this->createCategory($categoryId, $depth);
+            $this->createCategory((int)$categoryId, $depth);
         }
     }
 }

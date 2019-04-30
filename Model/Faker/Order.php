@@ -7,6 +7,7 @@ namespace Agranjeon\Faker\Model\Faker;
 use Agranjeon\Faker\Api\FakerInterface;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\CatalogInventory\Helper\Stock;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -16,6 +17,8 @@ use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Store\Model\ResourceModel\Store\CollectionFactory as StoreCollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Alexandre Granjeon <alexandre.granjeon@gmail.com>
@@ -50,6 +53,12 @@ class Order extends AbstractFaker implements FakerInterface
      * @var CollectionFactory
      */
     protected $productCollectionFactory;
+    /**
+     * Description $stockFilter field
+     *
+     * @var Stock $stockFilter
+     */
+    protected $stockFilter;
 
     /**
      * Order constructor.
@@ -60,9 +69,10 @@ class Order extends AbstractFaker implements FakerInterface
      * @param StoreManagerInterface       $storeManager
      * @param QuoteFactory                $quoteFactory
      * @param ProductFactory              $productFactory
-     * @param QuoteManagement             $quoteManagement
+     * @param CartManagementInterface     $quoteManagement
      * @param SearchCriteriaBuilder       $searchCriteriaBuilder
      * @param CollectionFactory           $productCollectionFactory
+     * @param Stock                       $stockFilter
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -73,7 +83,8 @@ class Order extends AbstractFaker implements FakerInterface
         ProductFactory $productFactory,
         CartManagementInterface $quoteManagement,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        CollectionFactory $productCollectionFactory
+        CollectionFactory $productCollectionFactory,
+        Stock $stockFilter
     ) {
         parent::__construct($scopeConfig, $storeCollectionFactory);
 
@@ -84,55 +95,73 @@ class Order extends AbstractFaker implements FakerInterface
         $this->quoteManagement          = $quoteManagement;
         $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
         $this->productCollectionFactory = $productCollectionFactory;
+        $this->stockFilter              = $stockFilter;
     }
 
     /**
+     * @param OutputInterface $output
+     *
      * @return void
      */
-    public function generateFakeData(): void
+    public function generateFakeData(OutputInterface $output): void
     {
-        $productIds = $this->getProductIds();
-        $customers  = $this->getCustomers();
+        $productIds  = $this->getProductIds();
+        $customers   = $this->getCustomers();
+        $progressBar = new ProgressBar(
+            $output->section(), count($customers)
+        );
+        $progressBar->setFormat(
+            '<info>%message%</info> %current%/%max% [%bar%] %percent:3s%% %elapsed% %memory:6s%'
+        );
+        $progressBar->start();
+        $progressBar->setMessage('Orders ...');
+        $progressBar->display();
+
+        $e = 0;
         foreach ($customers as $customer) {
-            $store                    = $this->storeManager->getStore($customer->getStoreId());
-            $availableShippingMethods = $this->getStoreConfig('faker/order/shipping_method', $store);
-            $availablePaymentMethods  = $this->getStoreConfig('faker/order/payment_method', $store);
+            $e++;
+            $store = $this->storeManager->getStore($customer->getStoreId());
+            if (!$store->getIsActive()) {
+                continue;
+            }
+            $availableShippingMethods = explode(',', $this->getStoreConfig('faker/order/shipping_method', $store));
+            $availablePaymentMethods  = explode(',', $this->getStoreConfig('faker/order/payment_method', $store));
 
             $numberOfOrders = $this->getStoreConfig('faker/order/number', $store);
             for ($i = 0; $i < $numberOfOrders; $i++) {
-                $shippingMethod = array_rand($availableShippingMethods);
-                $paymentMethod  = array_rand($availablePaymentMethods);
+                $shippingMethod = $availableShippingMethods[array_rand($availableShippingMethods)];
+                $paymentMethod  = $availablePaymentMethods[array_rand($availablePaymentMethods)];
 
                 $quote = $this->quoteFactory->create();
                 $quote->setStore($store);
                 $quote->setCurrency();
                 $quote->assignCustomer($customer);
 
-                $shippingAddress = $customer->getDefaultShipping();
-                $billingAddress  = $customer->getDefaultBilling();
+                $shippingAddress = $customer->getAddresses();
                 $numberOfItems   = rand(
-                    $this->getStoreConfig('faker/order/min_items_number', $store),
-                    $this->getStoreConfig('faker/order/max_items_number', $store)
+                    (int)$this->getStoreConfig('faker/order/min_items_number', $store),
+                    (int)$this->getStoreConfig('faker/order/max_items_number', $store)
                 );
 
                 for ($i = 0; $i < $numberOfItems; $i++) {
-                    $product = $this->productFactory->create()->load(array_rand($productIds));
+                    $product = $this->productFactory->create()->load($productIds[array_rand($productIds)]);
                     $quote->addProduct(
                         $product,
                         rand(1, 3) // qty
                     );
                 }
 
-                $quote->getBillingAddress()->addData($shippingAddress);
-                $quote->getShippingAddress()->addData($billingAddress);
+                $quote->getBillingAddress()->importCustomerAddressData(reset($shippingAddress));
+                $quote->getShippingAddress()->importCustomerAddressData(reset($shippingAddress));
 
                 $shippingAddress = $quote->getShippingAddress();
-                $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod(
+                $shippingAddress->setCollectShippingRates(1)->collectShippingRates()->setShippingMethod(
                     $shippingMethod
                 );
 
                 $quote->setPaymentMethod($paymentMethod);
                 $quote->setInventoryProcessed(false);
+                $quote->save();
 
                 $quote->getPayment()->importData(['method' => $paymentMethod]);
 
@@ -140,7 +169,9 @@ class Order extends AbstractFaker implements FakerInterface
 
                 $this->quoteManagement->submit($quote);
             }
+            $progressBar->advance();
         }
+        $progressBar->finish();
     }
 
     /**
@@ -162,6 +193,8 @@ class Order extends AbstractFaker implements FakerInterface
      */
     protected function getProductIds(): array
     {
-        return $this->productCollectionFactory->create()->addFieldToFilter('status', ['eq' => true])->getAllIds();
+        $collection = $this->productCollectionFactory->create()->addFieldToFilter('status', ['eq' => true]);
+        $this->stockFilter->addIsInStockFilterToCollection($collection);
+        return $collection->getAllIds();
     }
 }
