@@ -10,7 +10,6 @@ use Magento\Framework\DB\TransactionFactory;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
-use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Store\Model\ResourceModel\Store\CollectionFactory as StoreCollectionFactory;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,12 +25,6 @@ class Invoice extends AbstractFaker implements FakerInterface
      * @var OrderCollectionFactory $orderCollectionFactory
      */
     protected $orderCollectionFactory;
-    /**
-     * Description $invoiceService field
-     *
-     * @var InvoiceService $invoiceService
-     */
-    protected $invoiceService;
     /**
      * Description $transactionFactory field
      *
@@ -87,7 +80,7 @@ class Invoice extends AbstractFaker implements FakerInterface
                 $order->setIsInProcess(true);
                 $transaction = $this->transactionFactory->create()
                     ->addObject($invoice)
-                    ->addObject($invoice->getOrder());
+                    ->addObject($order);
 
                 $transaction->save();
             }
