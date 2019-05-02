@@ -29,4 +29,9 @@
             <argument name="quoteManagement" xsi:type="object">Magento\Quote\Model\QuoteManagement\Proxy</argument>
         </arguments>
     </type>
+    <type name="Agranjeon\Faker\Model\Faker\Invoice">
+        <arguments>
+            <argument name="invoiceService" xsi:type="object">Magento\Sales\Model\Service\InvoiceService\Proxy</argument>
+        </arguments>
+    </type>
 </config>
