@@ -144,11 +144,17 @@ class Order extends AbstractFaker implements FakerInterface
                 );
 
                 for ($i = 0; $i < $numberOfItems; $i++) {
-                    $product = $this->productFactory->create()->load($productIds[array_rand($productIds)]);
-                    $quote->addProduct(
-                        $product,
-                        rand(1, 3) // qty
-                    );
+                    try {
+                        $product = $this->productFactory->create()->load($productIds[array_rand($productIds)]);
+                        $quote->addProduct(
+                            $product,
+                            rand(1, 3) // qty
+                        );
+                    } catch(\Exception $exception) {
+                    }
+                }
+                if (count($quote->getItemsCollection()->getItems()) == 0) {
+                    continue;
                 }
 
                 $quote->getBillingAddress()->importCustomerAddressData(reset($shippingAddress));
@@ -161,13 +167,13 @@ class Order extends AbstractFaker implements FakerInterface
 
                 $quote->setPaymentMethod($paymentMethod);
                 $quote->setInventoryProcessed(false);
-                $quote->save();
-
-                $quote->getPayment()->importData(['method' => $paymentMethod]);
-
-                $quote->collectTotals()->save();
-
-                $this->quoteManagement->submit($quote);
+                try {
+                    $quote->save();
+                    $quote->getPayment()->importData(['method' => $paymentMethod]);
+                    $quote->collectTotals()->save();
+                    $this->quoteManagement->submit($quote);
+                } catch(\Exception $exception) {
+                }
             }
             $progressBar->advance();
         }

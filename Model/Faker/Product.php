@@ -89,7 +89,11 @@ class Product extends AbstractFaker implements FakerInterface
             $product = $this->productFactory->create();
             $product->setSku(uniqid());
             $product->setStatus($faker->boolean(90));
-            $product->setName(substr($faker->realText($faker->numberBetween(15, 25)), 0, -1));
+            $name = '';
+            while (strlen($name) < 1) {
+                $name = substr($faker->realText($faker->numberBetween(15, 25), 3), 0, -1);
+            }
+            $product->setName($name);
             $product->setUrlKey($faker->uuid);
             $product->setWebsiteIds($websiteIds);
             $product->setTypeId('simple');
@@ -116,8 +120,12 @@ class Product extends AbstractFaker implements FakerInterface
                 )
             );
 
+            if (!is_array($productCategoryIds)) {
+                $productCategoryIds = [$productCategoryIds];
+            }
+
             $productCategories = [];
-            foreach ((array)$productCategoryIds as $categoryId) {
+            foreach ($productCategoryIds as $categoryId) {
                 $productCategories[] = $categoryIds[$categoryId];
             }
 

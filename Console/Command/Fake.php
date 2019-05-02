@@ -75,8 +75,8 @@ class Fake extends Command
             [
                 new InputArgument(
                     self::CODE_ARGUMENT,
-                    InputArgument::REQUIRED,
-                    'Code of the fake data to generate (All to generate all fake data)'
+                    InputArgument::REQUIRED | InputArgument::IS_ARRAY,
+                    'Code of the fake data to generate ("all" to generate all fake data)'
                 ),
             ]
         );
@@ -112,21 +112,22 @@ class Fake extends Command
             return;
         }
 
-        $code = $input->getArgument(self::CODE_ARGUMENT);
+        $requestedCodes = $input->getArgument(self::CODE_ARGUMENT);
+        $requestedCodes = array_filter(array_map('trim', $requestedCodes), 'strlen');
 
-        if ($code !== 'all') {
+        foreach ($requestedCodes as $code) {
+            if ($code === 'all') {
+                $fakers = $this->fakerProvider->getFakers();
+                foreach ($fakers as $code => $faker) {
+                    $faker->generateFakeData($output);
+                }
+
+                return;
+            }
             $faker = $this->fakerProvider->getFaker($code);
             $faker->generateFakeData($output);
-
-            $io->success('Fake data has been successfully generated for ' . $code);
-
-            return;
         }
 
-        $fakers = $this->fakerProvider->getFakers();
-        foreach ($fakers as $code => $faker) {
-            $faker->generateFakeData($output);
-        }
         $io->success('Fake data has been successfully generated');
     }
 }
