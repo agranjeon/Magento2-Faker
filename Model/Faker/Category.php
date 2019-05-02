@@ -92,7 +92,7 @@ class Category extends AbstractFaker implements FakerInterface
         }
 
         $category = $this->categoryFactory->create();
-        $category->setName(substr($this->faker->realText(20), 0, -1));
+        $category->setName(substr($this->faker->realText(20, 3), 0, -1));
         $category->setUrlKey($this->faker->uuid);
         $category->setParentId($parentId);
         $category->setIsActive($this->faker->boolean(85));
@@ -105,7 +105,12 @@ class Category extends AbstractFaker implements FakerInterface
             ]
         );
 
-        $categoryId = $this->categoryRepository->save($category)->getId();
+        try {
+            $categoryId = $this->categoryRepository->save($category)->getId();
+        } catch (\Exception $e) {
+            var_dump($category->debug());
+            var_dump($e->getMessage());die;
+        }
         $depth--;
 
         if ($depth == 0) {

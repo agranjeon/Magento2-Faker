@@ -15,7 +15,7 @@
                 </field>
                 <field id="locale" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Locale of fake data</label>
-                    <source_model>Agranjeon\Faker\Model\Config\Source\Locale</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Locale</source_model>
                 </field>
                 <field id="website_ids" translate="label" type="multiselect" sortOrder="20" showInDefault="1">
                     <label>Website to generate fake data</label>
@@ -51,7 +51,7 @@
                 </field>
             </group>
             <group id="customer" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Product Configuration</label>
+                <label>Customer Configuration</label>
                 <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Number of customer to create per store</label>
                 </field>
@@ -67,10 +67,10 @@
                 <field id="number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Number of order to create per customer</label>
                 </field>
-                <field id="min_items_number" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="min_items_number" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Minimum number of items per order</label>
                 </field>
-                <field id="number" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="max_items_number" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximum number of items per order</label>
                 </field>
                 <field id="payment_method" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -86,9 +86,6 @@
                 </field>
                 <field id="shipment_ratio" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Ratio of invoiced order to ship</label>
-                </field>
-                <field id="rma_ratio" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Ratio of order to cancel</label>
                 </field>
             </group>
         </section>

@@ -6,9 +6,10 @@ namespace Agranjeon\Faker\Console\Command;
 
 use Agranjeon\Faker\Model\FakerProvider;
 use Magento\Framework\App\Area;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\State;
+use Magento\Framework\ObjectManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,23 +29,41 @@ class Fake extends Command
      * @var State $appState
      */
     protected $appState;
+    /**
+     * Description $scopeConfig field
+     *
+     * @var ScopeConfigInterface $scopeConfig
+     */
+    protected $scopeConfig;
+    /**
+     * Description $objectManager field
+     *
+     * @var ObjectManagerInterface $objectManager
+     */
+    protected $objectManager;
 
     /**
      * Fake constructor
      *
-     * @param FakerProvider $fakerProvider
-     * @param State         $appState
-     * @param string|null   $name
+     * @param FakerProvider          $fakerProvider
+     * @param State                  $appState
+     * @param ScopeConfigInterface   $scopeConfig
+     * @param ObjectManagerInterface $objectManager
+     * @param string|null            $name
      */
     public function __construct(
         FakerProvider $fakerProvider,
         State $appState,
+        ScopeConfigInterface $scopeConfig,
+        ObjectManagerInterface $objectManager,
         ?string $name = null
     ) {
         parent::__construct($name);
 
         $this->fakerProvider = $fakerProvider;
         $this->appState      = $appState;
+        $this->scopeConfig   = $scopeConfig;
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -76,7 +95,23 @@ class Fake extends Command
         } catch (\Exception $exception) {
         }
 
-        $io   = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($input, $output);
+        /** @var \Magento\Deploy\Model\Mode $mode */
+        $mode        = $this->objectManager->create(
+            \Magento\Deploy\Model\Mode::class,
+            [
+                'input'  => $input,
+                'output' => $output,
+            ]
+        );
+        $currentMode = $mode->getMode() ?: State::MODE_DEFAULT;
+
+        if ($currentMode == State::MODE_PRODUCTION && !$this->scopeConfig->getValue('faker/global/enabled_prod')) {
+            $io->error('Generation of fake data is disabled');
+
+            return;
+        }
+
         $code = $input->getArgument(self::CODE_ARGUMENT);
 
         if ($code !== 'all') {

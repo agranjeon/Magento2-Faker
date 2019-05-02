@@ -117,7 +117,7 @@ class Product extends AbstractFaker implements FakerInterface
             );
 
             $productCategories = [];
-            foreach ($productCategoryIds as $categoryId) {
+            foreach ((array)$productCategoryIds as $categoryId) {
                 $productCategories[] = $categoryIds[$categoryId];
             }
 

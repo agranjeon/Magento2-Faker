@@ -19,7 +19,6 @@
                 <item name="order" xsi:type="object">Agranjeon\Faker\Model\Faker\Order</item>
                 <item name="invoice" xsi:type="object">Agranjeon\Faker\Model\Faker\Invoice</item>
                 <item name="shipment" xsi:type="object">Agranjeon\Faker\Model\Faker\Shipment</item>
-                <item name="rma" xsi:type="object">Agranjeon\Faker\Model\Faker\Rma</item>
             </argument>
         </arguments>
     </type>
