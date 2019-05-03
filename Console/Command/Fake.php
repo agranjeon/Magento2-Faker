@@ -30,14 +30,10 @@ class Fake extends Command
      */
     protected $appState;
     /**
-     * Description $scopeConfig field
-     *
      * @var ScopeConfigInterface $scopeConfig
      */
     protected $scopeConfig;
     /**
-     * Description $objectManager field
-     *
      * @var ObjectManagerInterface $objectManager
      */
     protected $objectManager;

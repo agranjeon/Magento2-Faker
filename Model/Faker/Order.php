@@ -54,8 +54,6 @@ class Order extends AbstractFaker implements FakerInterface
      */
     protected $productCollectionFactory;
     /**
-     * Description $stockFilter field
-     *
      * @var Stock $stockFilter
      */
     protected $stockFilter;

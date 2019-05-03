@@ -18,8 +18,6 @@ use Magento\Store\Model\ScopeInterface;
 abstract class AbstractFaker
 {
     /**
-     * Description $scopeConfig field
-     *
      * @var ScopeConfigInterface $scopeConfig
      */
     protected $scopeConfig;

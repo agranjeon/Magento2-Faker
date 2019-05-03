@@ -20,14 +20,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Invoice extends AbstractFaker implements FakerInterface
 {
     /**
-     * Description $orderCollectionFactory field
-     *
      * @var OrderCollectionFactory $orderCollectionFactory
      */
     protected $orderCollectionFactory;
     /**
-     * Description $transactionFactory field
-     *
      * @var TransactionFactory $transactionFactory
      */
     protected $transactionFactory;
@@ -90,8 +86,6 @@ class Invoice extends AbstractFaker implements FakerInterface
     }
 
     /**
-     * Description getOrders function
-     *
      * @return Collection
      */
     protected function getOrders(): Collection

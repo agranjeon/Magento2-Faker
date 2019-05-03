@@ -21,20 +21,14 @@ use Magento\Store\Model\ResourceModel\Store\CollectionFactory as StoreCollection
 class Shipment extends AbstractFaker implements FakerInterface
 {
     /**
-     * Description $orderCollectionFactory field
-     *
      * @var OrderCollectionFactory $orderCollectionFactory
      */
     protected $orderCollectionFactory;
     /**
-     * Description $transactionFactory field
-     *
      * @var TransactionFactory $transactionFactory
      */
     protected $transactionFactory;
     /**
-     * Description $orderConverter field
-     *
      * @var OrderConverter $orderConverter
      */
     protected $orderConverter;
@@ -114,8 +108,6 @@ class Shipment extends AbstractFaker implements FakerInterface
     }
 
     /**
-     * Description getOrders function
-     *
      * @return Collection
      */
     protected function getOrders(): Collection
