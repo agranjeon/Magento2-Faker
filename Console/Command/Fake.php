@@ -118,7 +118,7 @@ class Fake extends Command
                     $faker->generateFakeData($output);
                 }
 
-                return;
+                break;
             }
             $faker = $this->fakerProvider->getFaker($code);
             $faker->generateFakeData($output);

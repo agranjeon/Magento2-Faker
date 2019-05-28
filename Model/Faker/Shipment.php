@@ -87,20 +87,17 @@ class Shipment extends AbstractFaker implements FakerInterface
                             continue;
                         }
 
-                        $qty = $item->getQtyToShip();
+                        $qty          = $item->getQtyToShip();
                         $shipmentItem = $this->orderConverter->itemToShipmentItem($item)->setQty($qty);
                         $shipment->addItem($shipmentItem);
                     }
                     $shipment->register();
                     $order->setIsInProcess(true);
-                    $transaction = $this->transactionFactory->create()
-                        ->addObject($shipment)
-                        ->addObject($order);
+                    $transaction = $this->transactionFactory->create()->addObject($shipment)->addObject($order);
 
                     $transaction->save();
-                } catch(\Exception $exception) {
+                } catch (\Exception $exception) {
                 }
-
             }
             $progressBar->advance();
         }

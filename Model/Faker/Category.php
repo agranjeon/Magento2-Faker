@@ -92,7 +92,7 @@ class Category extends AbstractFaker implements FakerInterface
         }
 
         $category = $this->categoryFactory->create();
-        $name = '';
+        $name     = '';
         while (strlen($name) < 1) {
             $name = substr($this->faker->realText(20, 3), 0, -1);
         }
@@ -103,7 +103,7 @@ class Category extends AbstractFaker implements FakerInterface
         $category->setCustomAttributes(
             [
                 'description'      => $this->faker->realText(100, 5),
-                'meta_title'        => $this->faker->realText(20, 3),
+                'meta_title'       => $this->faker->realText(20, 3),
                 'meta_keywords'    => $this->faker->realText(50, 5),
                 'meta_description' => $this->faker->realText(100, 5),
             ]

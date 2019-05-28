@@ -73,10 +73,7 @@ class Product extends AbstractFaker implements FakerInterface
         $websiteIds      = explode(',', $this->getStoreConfig('faker/global/website_ids'));
         $faker           = $this->getFaker(0);
         $categoryIds     = $this->categoryCollectionFactory->create()->getAllIds();
-        $progressBar     = new ProgressBar(
-            $output->section(),
-            $numberOfProduct
-        );
+        $progressBar     = new ProgressBar($output->section(), $numberOfProduct);
         $progressBar->setFormat(
             '<info>%message%</info> %current%/%max% [%bar%] %percent:3s%% %elapsed% %memory:6s%'
         );

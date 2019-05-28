@@ -74,9 +74,7 @@ class Invoice extends AbstractFaker implements FakerInterface
             if ($faker->boolean($ratio) && $order->canInvoice()) {
                 $invoice = $order->prepareInvoice()->register();
                 $order->setIsInProcess(true);
-                $transaction = $this->transactionFactory->create()
-                    ->addObject($invoice)
-                    ->addObject($order);
+                $transaction = $this->transactionFactory->create()->addObject($invoice)->addObject($order);
 
                 $transaction->save();
             }

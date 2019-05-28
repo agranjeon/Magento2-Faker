@@ -148,7 +148,7 @@ class Order extends AbstractFaker implements FakerInterface
                             $product,
                             rand(1, 3) // qty
                         );
-                    } catch(\Exception $exception) {
+                    } catch (\Exception $exception) {
                     }
                 }
                 if (count($quote->getItemsCollection()->getItems()) == 0) {
@@ -170,7 +170,7 @@ class Order extends AbstractFaker implements FakerInterface
                     $quote->getPayment()->importData(['method' => $paymentMethod]);
                     $quote->collectTotals()->save();
                     $this->quoteManagement->submit($quote);
-                } catch(\Exception $exception) {
+                } catch (\Exception $exception) {
                 }
             }
             $progressBar->advance();
@@ -199,6 +199,7 @@ class Order extends AbstractFaker implements FakerInterface
     {
         $collection = $this->productCollectionFactory->create()->addFieldToFilter('status', ['eq' => true]);
         $this->stockFilter->addIsInStockFilterToCollection($collection);
+
         return $collection->getAllIds();
     }
 }

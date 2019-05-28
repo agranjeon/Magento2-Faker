@@ -78,8 +78,7 @@ class CustomerAddress extends AbstractFaker implements FakerInterface
         $customers->addFieldToFilter('website_id', ['in' => $this->getStoreConfig('faker/global/website_ids')]);
 
         $progressBar = new ProgressBar(
-            $output->section(),
-            $customers->getSize()
+            $output->section(), $customers->getSize()
         );
         $progressBar->setFormat(
             '<info>%message%</info> %current%/%max% [%bar%] %percent:3s%% %elapsed% %memory:6s%'
@@ -94,7 +93,7 @@ class CustomerAddress extends AbstractFaker implements FakerInterface
             $minAddressNumber   = $this->getStoreConfig('faker/customer/min_address_number', $storeId);
             $maxAddressNumber   = $this->getStoreConfig('faker/customer/max_address_number', $storeId);
             $availableCountryId = explode(',', $this->getStoreConfig('general/country/allow', $storeId));
-            $country = $availableCountryId[array_rand($availableCountryId)];
+            $country            = $availableCountryId[array_rand($availableCountryId)];
             $availableRegionId  = $this->getAvailableRegionIds($country);
             $faker              = $this->getFaker($storeId);
             $iterationNumber    = $faker->numberBetween($minAddressNumber, $maxAddressNumber);
