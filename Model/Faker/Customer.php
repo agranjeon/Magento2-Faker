@@ -69,14 +69,13 @@ class Customer extends AbstractFaker implements FakerInterface
 
         /** @var Store $store */
         foreach ($this->getStores() as $store) {
-            $faker     = $this->getFaker($store);
-            $websiteId = $store->getWebsiteId();
-            $storeId   = $store->getStoreId();
+            $faker          = $this->getFaker($store);
+            $websiteId      = $store->getWebsiteId();
+            $storeId        = $store->getStoreId();
             $customerNumber = (int)$this->getStoreConfig('faker/customer/number', $storeId);
 
             $progressBar = new ProgressBar(
-                $output->section(),
-                $customerNumber
+                $output->section(), $customerNumber
             );
             $progressBar->setFormat(
                 '<info>%message%</info> %current%/%max% [%bar%] %percent:3s%% %elapsed% %memory:6s%'
@@ -94,7 +93,7 @@ class Customer extends AbstractFaker implements FakerInterface
                         CustomerInterface::PREFIX     => $faker->title,
                         CustomerInterface::FIRSTNAME  => $faker->firstName,
                         CustomerInterface::LASTNAME   => $faker->lastName,
-                        CustomerInterface::EMAIL      => $faker->email,
+                        CustomerInterface::EMAIL      => uniqid().$faker->email,
                         CustomerInterface::DOB        => $faker->date('m/d/Y'),
                         CustomerInterface::GENDER     => $faker->numberBetween(0, 1),
                         CustomerInterface::GROUP_ID   => $customerGroupIds[array_rand($customerGroupIds)],
