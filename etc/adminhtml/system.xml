@@ -75,7 +75,7 @@
                 </field>
                 <field id="payment_method" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Payment method</label>
-                    <source_model>Magento\Payment\Model\Config\Source\Allmethods</source_model>
+                    <source_model>Agranjeon\Faker\Model\Config\Source\Payment\AllActiveMethods</source_model>
                 </field>
                 <field id="shipping_method" translate="label" type="multiselect" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Shipping method</label>
